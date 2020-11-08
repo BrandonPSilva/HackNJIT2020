@@ -10,6 +10,7 @@ var remoteVideo = document.getElementById("remoteVideo");
 var roomNumber;
 var localStream;
 var remoteStream;
+var localClientID;
 var rtcPeerConnection;
 var iceServers = {
     'iceServers': [
@@ -38,6 +39,7 @@ btnJoinRoom.onclick = function () {
 // Server emit is created
 socket.on('created', function (room) {
     console.log("Caller received user media devices");
+    console.log(room);
     navigator.mediaDevices.getUserMedia(streamConstraints).then(function (stream) {
         localStream = stream;
         localVideo.srcObject = stream;
@@ -48,9 +50,15 @@ socket.on('created', function (room) {
     });
 });
 
+socket.on('exchangeClientID', clientID => {
+    localClientID = clientID;
+    console.log("Client ID assigned from Server:" + clientID);
+});
+
 //Server emits join
 socket.on('joined', function (room) {
     console.log("Callee receives user media devices");
+    //console.log(room + io.sockets.adapter.rooms[room])
     navigator.mediaDevices.getUserMedia(streamConstraints).then(function (stream) {
         localStream = stream;
         localVideo.srcObject = stream;
@@ -122,9 +130,12 @@ socket.on('answer', function (event) {
     rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event));
 })
 
-socket.on('translation', function(msg){
-    console.log("HTML Modified")
-        document.getElementById("translateBox").innerHTML = msg;
+socket.on('translation', function(msg) {
+    
+    //console.log("clientID and msg received");
+    console.log(msg);
+    document.getElementById("translateBox1").innerHTML = msg;
+    //}
   });
 
 // handler functions

@@ -12,19 +12,17 @@ app.use(express.static('public'));
 
 // signaling
 io.on('connection', function (socket) {
-    //console.log('a user connected');
 
     socket.on('create or join', function (room) {
-        console.log('create or join to room ', room);
         
         var myRoom = io.sockets.adapter.rooms[room] || { length: 0 };
         var numClients = myRoom.length;
-
-        console.log(room, ' has ', numClients, ' clients');
-
+        var clientID = room + numClients;
+        socket.emit('exchangeClientID',clientID);
+            
         if (numClients == 0) {
             socket.join(room);
-            socket.emit('created', room);
+            socket.emit('created', (room));
         } else if (numClients == 1) {
             socket.join(room);
             socket.emit('joined', room);
@@ -50,9 +48,8 @@ io.on('connection', function (socket) {
     });
     
     socket.on('translation', function(msg){
-    	console.log(msg);
-    	
-    	io.emit('translation', msg);
+        console.log("transmitting CID and message");
+    	socket.broadcast.emit('translation', msg);
   	});
 
 });

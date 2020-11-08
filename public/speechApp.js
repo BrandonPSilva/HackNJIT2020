@@ -1,5 +1,5 @@
 // status fields and start button in UI
-var phraseDiv;
+var translateBox0;
 var startRecognizeOnceAsyncButton;
 
 // subscription key and region for speech services.
@@ -11,11 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
   startRecognizeOnceAsyncButton = document.getElementById("startRecognizeOnceAsyncButton");
   languageTargetOptions = document.getElementById("languageTargetOptions");
   languageSourceOptions = document.getElementById("languageSourceOptions");
-  phraseDiv = document.getElementById("phraseDiv");
+  translateBox0 = document.getElementById("translateBox0");
 
   startRecognizeOnceAsyncButton.addEventListener("click", function () {
     startRecognizeOnceAsyncButton.disabled = true;
-    phraseDiv.innerHTML = "";
+    translateBox0.innerHTML = "";
 
     // if we got an authorization token, use the token. Otherwise use the provided subscription key
     var speechConfig = SpeechSDK.SpeechTranslationConfig.fromSubscription(subscriptionKey, serviceRegion);
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
     recognizer.recognized = (s, e) => {
         let translation = e.result.translations.get(language);
         console.log(`RECOGNIZED: Text=${translation}`);
-        phraseDiv.innerHTML = translation;     
+        translateBox0.innerHTML = translation;
         socket.emit('translation', translation);
     };
 
@@ -68,7 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
     startRecognizeOnceAsyncButton.disabled = false;
 
     document.getElementById('content').style.display = 'block';
-    document.getElementById('warning').style.display = 'none';
 
     // in case we have a function for getting an authorization token, call it.
     if (typeof RequestAuthorizationToken === "function") {
