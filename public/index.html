@@ -1,42 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Language Liquidation</title>
-	<script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script>
-<script src="speechApp.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-</head>
-<body>
-	<h1>Language Liquidation</h1>
-	
-	<!-- Room Number Selection-->
-	<div id="selectRoom">
-		<label></label>
-		<input id="roomNumber" type="text" />
-		<button id="joinRoom">Enter Room</button>
-	</div>
 
-	<!-- Video Streams -->
-	<div id="conferenceRoom" style="display:none">
-		<video id="localVideo" autoplay></video>
-		<video id="remoteVideo" autoplay></video>
-	</div>
-	<div id="warning">
-    <h1 style="font-weight:500;">Speech Recognition Speech SDK not found (microsoft.cognitiveservices.speech.sdk.bundle.js missing).</h1>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Language Liquidation</title>
+  <linkrel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <h1>Language Liquidation</h1>
+
+  <!-- Room Number Selection-->
+  <div id="selectRoom">
+    <label></label>
+    <input id="roomNumber" type="text" />
+    <button id="joinRoom">Enter Room Number</button>
+  </div>
+
+  <!-- Video Streams -->
+  <div id="conferenceRoom">
+    <div class="container">
+      <video id="localVideo" autoplay></video>
+      <div id="content" style="display:none">
+        <table width="100%">
+          <tr>
+            <td align="right">Source Language</td>
+            <td><select id="languageSourceOptions">
+          <option value="ar-EG">Arabic - EG</option>
+          <option selected="selected" value="en-US">English - US</option>
+          <option value="de-DE">German - DE</option>
+          <option value="es-ES">Spanish - ES</option>
+          <option value="fi-FI">Finnish - FI</option>
+          <option value="fr-FR">French - FR</option>
+          <option value="hi-IN">Hindi - IN</option>
+          <option value="it-IT">Italian - IT</option>
+          <option value="ja-JP">Japanese - JP</option>
+          <option value="ko-KR">Korean - KR</option>
+          <option value="pl-PL">Polish - PL</option>
+          <option value="pt-PT">Portuguese - The right one</option>
+          <option value="ru-RU">Russian - RU</option>
+          <option value="sv-SE">Swedish - SE</option>
+          <option value="zh-Hans">Chinese - Simplified</option>
+        </select></td>
+          </tr>
+          <tr>
+            <td align="right">Target Language</td>
+            <td><select id="languageTargetOptions">
+          <option value="ar">Arabic</option>
+          <option selected="selected" value="en">English</option>
+          <option value="de">German</option>
+          <option value="es">Spanish</option>
+          <option value="fi">Finnish</option>
+          <option value="fr">French</option>
+          <option value="hi">Hindi</option>
+          <option value="it">Italian</option>
+          <option value="ja">Japanese</option>
+          <option value="ko">Korean</option>
+          <option value="pl">Polish</option>
+          <option value="pt">Portuguese</option>
+          <option value="ru">Russian</option>
+          <option value="sv">Swedish</option>
+          <option value="zh-Hans">Chinese</option>
+        </select></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td><button id="startRecognizeOnceAsyncButton">Start recognition</button></td>
+          </tr>
+        </table>
+      </div>
+      <video id="remoteVideo" autoplay></video>
+    </div>
   </div>
   
-  
-  <!-- Speech Translation --> 
+  <div class="container">
+    <div class="padding"><textarea disabled id="phraseDiv"></textarea></div>
+    <div></div>
+    <div class="padding"><textarea disabled id="translateBox"></textarea></div>
+  </div>
+  <!-- Speech Translation -->
+  <!--
   <div id="content" style="display:none">
     <table width="100%">
       <tr>
         <td align="right">Source Language</td>
         <td><select id="languageSourceOptions">
           <option value="ar-EG">Arabic - EG</option>
-          <option selected="selected" value="de-DE">German - DE</option>
-          <option value="en-US">English - US</option>
+          <option selected="selected" value="en-US">English - US</option>
+          <option value="de-DE">German - DE</option>
           <option value="es-ES">Spanish - ES</option>
           <option value="fi-FI">Finnish - FI</option>
           <option value="fr-FR">French - FR</option>
@@ -55,8 +108,8 @@
         <td align="right">Target Language</td>
         <td><select id="languageTargetOptions">
           <option value="ar">Arabic</option>
-          <option selected="selected" value="de">German</option>
-          <option value="en">English</option>
+          <option selected="selected" value="en">English</option>
+          <option value="de">German</option>
           <option value="es">Spanish</option>
           <option value="fi">Finnish</option>
           <option value="fr">French</option>
@@ -81,9 +134,13 @@
       </tr>
     </table>
   </div>
+  -->
 
-	<!-- JS Libraries -->
-	<script src ="/socket.io/socket.io.js"></script>
-	<script src="client.js"></script>
+  <!-- JS Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@latest/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle-min.js"></script>
+  <script src="speechApp.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client.js"></script>
 </body>
+
 </html>

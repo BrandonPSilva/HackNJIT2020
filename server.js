@@ -12,7 +12,7 @@ app.use(express.static('public'));
 
 // signaling
 io.on('connection', function (socket) {
-    console.log('a user connected');
+    //console.log('a user connected');
 
     socket.on('create or join', function (room) {
         console.log('create or join to room ', room);
@@ -48,6 +48,12 @@ io.on('connection', function (socket) {
     socket.on('answer', function(event){
         socket.broadcast.to(event.room).emit('answer',event.sdp);
     });
+    
+    socket.on('translation', function(msg){
+    	console.log(msg);
+    	
+    	io.emit('translation', msg);
+  	});
 
 });
 

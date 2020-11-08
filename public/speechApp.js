@@ -3,7 +3,7 @@ var phraseDiv;
 var startRecognizeOnceAsyncButton;
 
 // subscription key and region for speech services.
-var subscriptionKey = "ada7b6e8bad148a19cc80113c39046c5", serviceRegion = "eastus", languageTargetOptions, languageSourceOptions;
+var subscriptionKey = "fd196885d09440aab9d20e0f68a3cbbd", serviceRegion = "eastus", languageTargetOptions, languageSourceOptions;
 var SpeechSDK;
 var recognizer;
 
@@ -33,8 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
     recognizer.recognized = (s, e) => {
         let translation = e.result.translations.get(language);
         console.log(`RECOGNIZED: Text=${translation}`);
-        
         phraseDiv.innerHTML = translation;     
+        socket.emit('translation', translation);
     };
 
     recognizer.canceled = (s, e) => {
@@ -62,28 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    /*
-
-    recognizer.recognizeOnceAsync(
-      function (result) {
-        startRecognizeOnceAsyncButton.disabled = false;
-        let translation = result.translations.get(language);
-        window.console.log(translation);
-        phraseDiv.innerHTML += translation;
-
-        recognizer.close();
-        recognizer = undefined;
-      },
-      function (err) {
-        startRecognizeOnceAsyncButton.disabled = false;
-        phraseDiv.innerHTML += err;
-        window.console.log(err);
-
-        recognizer.close();
-        recognizer = undefined;
-      });
-  });
-    */
 
   if (!!window.SpeechSDK) {
     SpeechSDK = window.SpeechSDK;

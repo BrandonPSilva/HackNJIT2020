@@ -24,6 +24,7 @@ var isCaller;
 var socket = io();
 
 btnJoinRoom.onclick = function () {
+    console.log("Join clicked");
     if (inputRoomNumber.value === '') {
         alert("Please type a room number")
     } else {
@@ -34,8 +35,9 @@ btnJoinRoom.onclick = function () {
     }
 };
 
-// message handlers
+// Server emit is created
 socket.on('created', function (room) {
+    console.log("Caller received user media devices");
     navigator.mediaDevices.getUserMedia(streamConstraints).then(function (stream) {
         localStream = stream;
         localVideo.srcObject = stream;
@@ -46,7 +48,9 @@ socket.on('created', function (room) {
     });
 });
 
+//Server emits join
 socket.on('joined', function (room) {
+    console.log("Callee receives user media devices");
     navigator.mediaDevices.getUserMedia(streamConstraints).then(function (stream) {
         localStream = stream;
         localVideo.srcObject = stream;
@@ -57,6 +61,7 @@ socket.on('joined', function (room) {
     });
 });
 
+//Server emits
 socket.on('candidate', function (event) {
     var candidate = new RTCIceCandidate({
         sdpMLineIndex: event.label,
@@ -66,6 +71,7 @@ socket.on('candidate', function (event) {
 });
 
 socket.on('ready', function () {
+    console.log("Server emits ready");
     if (isCaller) {
         rtcPeerConnection = new RTCPeerConnection(iceServers);
         rtcPeerConnection.onicecandidate = onIceCandidate;
@@ -88,6 +94,7 @@ socket.on('ready', function () {
 });
 
 socket.on('offer', function (event) {
+    console.log("offer submit");
     if (!isCaller) {
         rtcPeerConnection = new RTCPeerConnection(iceServers);
         rtcPeerConnection.onicecandidate = onIceCandidate;
@@ -111,8 +118,14 @@ socket.on('offer', function (event) {
 });
 
 socket.on('answer', function (event) {
+    console.log("answered");
     rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event));
 })
+
+socket.on('translation', function(msg){
+    console.log("HTML Modified")
+        document.getElementById("translateBox").innerHTML = msg;
+  });
 
 // handler functions
 function onIceCandidate(event) {
@@ -131,5 +144,5 @@ function onIceCandidate(event) {
 function onAddStream(event) {
     remoteVideo.srcObject = event.streams[0];
     remoteStream = event.stream;
+    //
 }
-
