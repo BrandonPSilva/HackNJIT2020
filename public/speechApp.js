@@ -3,7 +3,7 @@ var translateBox0;
 var startRecognizeOnceAsyncButton;
 
 // subscription key and region for speech services.
-var subscriptionKey = "fd196885d09440aab9d20e0f68a3cbbd", serviceRegion = "eastus", languageTargetOptions, languageSourceOptions;
+var subscriptionKey = "INSERT AZURE COGNITIVE SERVICES SUBSCRIPTION KEY", serviceRegion = "INSERT REGION HERE", languageTargetOptions, languageSourceOptions;
 var SpeechSDK;
 var recognizer;
 
